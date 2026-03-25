@@ -1,0 +1,163 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #f3f4f6;
+  color: #111827;
+}
+
+body {
+  margin: 0;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding: 48px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.picker-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.picker-card {
+  min-height: 180px;
+  padding: 24px;
+  border: 1px solid #d1d5db;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+button {
+  width: fit-content;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 999px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 16px;
+}
+
+button:disabled {
+  opacity: 0.5;
+}
+
+.compare-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.compare-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 32px;
+  border-bottom: 1px solid #d1d5db;
+  background: #ffffff;
+}
+
+.compare-toolbar__actions,
+.compare-toolbar__nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.compare-layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.compare-layout--sidebar-hidden {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.diff-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.diff-sidebar__item {
+  width: 100%;
+  text-align: left;
+  border-radius: 16px;
+}
+
+.diff-sidebar__item.is-active {
+  background: #1d4ed8;
+}
+
+.viewer-pane {
+  min-height: 320px;
+  padding: 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.viewer-pane__meta {
+  margin-bottom: 12px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.viewer-pane__document {
+  position: relative;
+}
+
+.diff-added {
+  background: rgba(34, 197, 94, 0.22);
+}
+
+.diff-removed {
+  background: rgba(239, 68, 68, 0.22);
+}
+
+.diff-modified {
+  background: rgba(245, 158, 11, 0.24);
+}
+
+.inline-error {
+  color: #b91c1c;
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  border-radius: 12px;
+  padding: 12px 16px;
+}
+
+.diff-placeholder {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px dashed currentColor;
+  background: rgba(255, 255, 255, 0.92);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.diff-placeholder--added {
+  color: #15803d;
+}
+
+.diff-placeholder--removed {
+  color: #b91c1c;
+}
+
+.diff-placeholder--modified {
+  color: #b45309;
+}
