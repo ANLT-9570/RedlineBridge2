@@ -50,4 +50,5 @@ export interface RedlineBridgeApi {
   pickFile(): Promise<string | null>
   compareDocuments(request: CompareRequest): Promise<CompareResult>
   cleanupTempArtifacts(paths: string[]): Promise<void>
+  readPdfFile(filePath: string): Promise<Uint8Array>
 }

@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/vitest'
-import { fireEvent, render, screen } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('react-pdf', () => ({
   Document: ({ children }: { children: unknown }) => <div>{children}</div>,
@@ -8,6 +8,15 @@ vi.mock('react-pdf', () => ({
 }))
 
 import CompareScreen from '../../../src/renderer/src/screens/CompareScreen'
+
+const api = {
+  pickFile: vi.fn(),
+  compareDocuments: vi.fn(),
+  cleanupTempArtifacts: vi.fn(),
+  readPdfFile: vi.fn()
+}
+
+Object.assign(window, { redlineBridge: api })
 
 const result = {
   format: 'pdf',
@@ -28,14 +37,40 @@ const result = {
 } as const
 
 describe('CompareScreen', () => {
-  it('moves to the selected diff when the sidebar row is clicked', () => {
+  beforeEach(() => {
+    api.readPdfFile.mockReset()
+    api.readPdfFile.mockResolvedValue(new Uint8Array([1, 2, 3]))
+  })
+
+  it('loads PDF bytes for both panes before rendering the documents', async () => {
+    api.readPdfFile.mockResolvedValue(new Uint8Array([1, 2, 3]))
+
     render(<CompareScreen result={result} onReset={() => undefined} />)
+
+    await waitFor(() => {
+      expect(api.readPdfFile).toHaveBeenCalledTimes(2)
+      expect(api.readPdfFile).toHaveBeenNthCalledWith(1, '/tmp/old.pdf')
+      expect(api.readPdfFile).toHaveBeenNthCalledWith(2, '/tmp/new.pdf')
+    })
+  })
+
+  it('moves to the selected diff when the sidebar row is clicked', async () => {
+    render(<CompareScreen result={result} onReset={() => undefined} />)
+
+    await waitFor(() => {
+      expect(api.readPdfFile).toHaveBeenCalledTimes(2)
+    })
+
     fireEvent.click(screen.getByText('付款期限 7 天 → 10 天'))
     expect(screen.getByText('1 / 1')).toBeInTheDocument()
   })
 
-  it('toggles the diff sidebar from the toolbar', () => {
+  it('toggles the diff sidebar from the toolbar', async () => {
     render(<CompareScreen result={result} onReset={() => undefined} />)
+
+    await waitFor(() => {
+      expect(api.readPdfFile).toHaveBeenCalledTimes(2)
+    })
 
     expect(screen.getByLabelText('差异列表')).toBeInTheDocument()
 

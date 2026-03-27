@@ -19,7 +19,26 @@ const api = {
 Object.assign(window, { redlineBridge: api })
 
 describe('HomeScreen', () => {
+  it('calls pickFile for each picker button and renders the chosen paths', async () => {
+    api.pickFile.mockReset()
+    api.pickFile.mockResolvedValueOnce('/tmp/left.pdf').mockResolvedValueOnce('/tmp/right.pdf')
+
+    render(<HomeScreen onCompared={vi.fn()} />)
+
+    fireEvent.click(screen.getByRole('button', { name: '选择左文档' }))
+    fireEvent.click(screen.getByRole('button', { name: '选择右文档' }))
+
+    await waitFor(() => {
+      expect(api.pickFile).toHaveBeenCalledTimes(2)
+      expect(screen.getByText('/tmp/left.pdf')).toBeInTheDocument()
+      expect(screen.getByText('/tmp/right.pdf')).toBeInTheDocument()
+    })
+  })
+
   it('enables compare after both files are selected', async () => {
+    api.pickFile.mockReset()
+    api.pickFile.mockResolvedValueOnce('/tmp/old.pdf').mockResolvedValueOnce('/tmp/new.pdf')
+
     render(<HomeScreen onCompared={vi.fn()} />)
 
     fireEvent.click(screen.getByRole('button', { name: '选择左文档' }))

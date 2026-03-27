@@ -8,9 +8,9 @@ interface FilePickerCardProps {
 export default function FilePickerCard({ title, buttonLabel, filePath, onPick }: FilePickerCardProps) {
   return (
     <section className="picker-card">
-      <h2>{title}</h2>
-      <p>{filePath ?? '未选择文件'}</p>
-      <button type="button" onClick={() => void onPick()}>
+      <h2 className="picker-card__title">{title}</h2>
+      <p className="picker-card__path">{filePath ?? '未选择文件'}</p>
+      <button className="picker-card__button" type="button" onClick={() => void onPick()}>
         {buttonLabel}
       </button>
     </section>
