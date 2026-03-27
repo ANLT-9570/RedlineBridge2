@@ -8,8 +8,12 @@ function createWindow() {
     width: 1440,
     height: 960,
     webPreferences: {
-      preload: path.join(__dirname, '../preload/index.js')
+      preload: path.join(__dirname, '../preload/index.cjs')
     }
+  })
+
+  window.webContents.on('console-message', (_event, _level, message) => {
+    console.log('[renderer-console]', message)
   })
 
   if (process.env['ELECTRON_RENDERER_URL']) {
