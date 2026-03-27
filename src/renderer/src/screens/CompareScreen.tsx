@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { CompareResult } from '../../../shared/contracts'
 import CompareToolbar from '../components/CompareToolbar'
 import DiffSidebar from '../components/DiffSidebar'
@@ -12,9 +12,36 @@ interface CompareScreenProps {
 export default function CompareScreen({ result, onReset }: CompareScreenProps) {
   const [activeIndex, setActiveIndex] = useState(0)
   const [sidebarVisible, setSidebarVisible] = useState(true)
+  const [leftPdfData, setLeftPdfData] = useState<Uint8Array | null>(null)
+  const [rightPdfData, setRightPdfData] = useState<Uint8Array | null>(null)
   const active = result.sidebarItems[activeIndex] ?? null
   const leftPage = active?.leftPageNumber ?? 1
   const rightPage = active?.rightPageNumber ?? 1
+
+  useEffect(() => {
+    let cancelled = false
+
+    async function loadPdfData() {
+      const [leftBytes, rightBytes] = await Promise.all([
+        window.redlineBridge.readPdfFile(result.leftDisplayPdfPath),
+        window.redlineBridge.readPdfFile(result.rightDisplayPdfPath)
+      ])
+
+      if (cancelled) {
+        return
+      }
+
+      setLeftPdfData(leftBytes)
+      setRightPdfData(rightBytes)
+    }
+
+    void loadPdfData()
+
+    return () => {
+      cancelled = true
+    }
+  }, [result.leftDisplayPdfPath, result.rightDisplayPdfPath])
+
 
   function selectDiff(id: string) {
     const nextIndex = result.sidebarItems.findIndex((item) => item.id === id)
@@ -41,11 +68,13 @@ export default function CompareScreen({ result, onReset }: CompareScreenProps) {
         ) : null}
         <PdfViewerPane
           pdfPath={result.leftDisplayPdfPath}
+          pdfData={leftPdfData}
           pageNumber={leftPage}
           annotations={result.leftAnnotations[leftPage] ?? []}
         />
         <PdfViewerPane
           pdfPath={result.rightDisplayPdfPath}
+          pdfData={rightPdfData}
           pageNumber={rightPage}
           annotations={result.rightAnnotations[rightPage] ?? []}
         />
