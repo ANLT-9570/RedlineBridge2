@@ -29,11 +29,23 @@ body {
 }
 
 .picker-card {
-  min-height: 180px;
-  padding: 24px;
+  min-height: 132px;
+  padding: 16px;
   border: 1px solid #d1d5db;
-  border-radius: 16px;
+  border-radius: 14px;
   background: #ffffff;
+}
+
+.picker-card__title {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.picker-card__path {
+  margin: 0 0 12px;
+  color: #4b5563;
+  font-size: 14px;
+  word-break: break-all;
 }
 
 button {
@@ -44,6 +56,14 @@ button {
   background: #2563eb;
   color: #ffffff;
   font-size: 16px;
+}
+
+.picker-card__button {
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: #e5e7eb;
+  color: #111827;
+  font-size: 14px;
 }
 
 button:disabled {
